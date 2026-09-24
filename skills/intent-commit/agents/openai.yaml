@@ -1,0 +1,4 @@
+interface:
+  display_name: "Intent Commit · 意图式提交"
+  short_description: "按独立意图整理 Git 提交，保留决策依据、验证记录与维护边界"
+  default_prompt: "使用 $intent-commit 为本次任务拟写提交信息并说明拆分理由，先不要暂存或提交。"

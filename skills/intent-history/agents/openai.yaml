@@ -1,0 +1,4 @@
+interface:
+  display_name: "Intent History · 历史意图"
+  short_description: "追溯 Git 历史中的设计意图，结合当前代码判断约束是否仍然成立"
+  default_prompt: "使用 $intent-history 追溯这段代码的设计意图，核对当前实现并说明证据缺口。"
