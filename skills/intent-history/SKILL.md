@@ -46,7 +46,7 @@ git --no-pager show --format=fuller <commit> -- <path>
 `--oneline` 仅用于定位。找到候选提交后，读取完整 message 和相关 diff；需要理解跨文件机制时再扩大 diff 范围。检查后续修复、迁移和 revert，避免将已被替代的设计当作当前约束。文件改名时可用 `git log --follow -- <path>` 继续追溯。
 
 若 Git 记录仍不足，可读取已经可访问的相关 PR、issue、设计文档或会话记录。
-若本机已安装 Entire CLI 并且你确实需要用到 Entire 工具的时候，**仅在找到相关 commit 后**，再通过 commit msg footer 的 Entire-Checkpoint 来结合 entire checkpoint explain 补充原始讨论。
+若本机已安装 Entire CLI ，你可以在需要的时候通过候选提交的 commit msg footer 的 Entire-Checkpoint 来结合 entire checkpoint explain 补充原始讨论。
 
 没有相关记录或工具不可用时，明确证据缺口，不编造背景。
 
