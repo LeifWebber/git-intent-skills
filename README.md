@@ -6,7 +6,7 @@
 
 <p align="center">
   <span><strong>简体中文</strong></span> ·
-  <a href="https://xxx"><strong>English</strong></a>
+  <a href="README.en.md"><strong>English</strong></a>
 </p>
 
 <br/>
@@ -15,21 +15,21 @@
 
 高效、精准的上下文对 AI Agent 顺利完成任务至关重要。  
 
-AI Agent 在执行任务的过程中，可能会进行若干次 Agentic Search 来收集它需要的信息。但要触及真正对解决问题有帮助的那个源码文件里的段落，通常要经过多轮，而这会让宝贵的上下文中充满无关的内容。  但是即便这样，和人类工程师不同的是，AI 只能看到源码表面的情况，却很难洞察它背后的设计意图。  
+AI Agent 在执行任务的过程中，可能会进行若干次 Agentic Search 来收集它需要的信息。但要触及真正对解决问题有帮助的那个源码文件里的段落，通常要经过多轮，而这会让宝贵的上下文中充满无关的内容。  即便如此，AI 也只能看到源码表面的情况，很难像人类工程师那样洞察它背后的设计意图。  
 
 正因如此，有人会主动为 AI 维护“项目文档 / 知识库”，亦或者是做“沉淀经验”之类的事，方便 AI 能在遇到问题的时候直接复用已有的经验和知识背景，而不是在源码的海洋里探索。  
 
 Codex 和 Claude 在今年 2 月也陆续上线了和 Memory 有关的 feature。  
 例如 Codex 会在 `~/.codex/memories/` 下，存储包括摘要、持久条目、近期输入，以及来自先前聊天的支持性证据。见 [Codex 官方 Memories 文档](https://learn.chatgpt.com/docs/customization/memories?surface=cli#cli-local-memory-storage)  
 
-另一个类似的工具是 [Entire](https://entire.io/)，它会在每次提交的时候保留 ai seesion 的完整记录，在需要消费的时候可以进行语义化检索。  
+另一个类似的工具是 [Entire](https://entire.io/)，它会在每次提交的时候保留 AI session 的完整记录，在需要消费的时候可以进行语义化检索。  
 
 而我的思路很简单：直接利用 git 提交信息本身。  
 我在自己维护的企业级项目里实践了这种方式很久，经常观察到它在关键时刻给 AI 提供了至关重要的信息。除此之外，这种方式相比于其他几种甚至还有些出乎意料的优势：  
 
-1. 无需安装额外的 CLI / MCP / Hook 工具，所以对任何 AI Harness 对适用。  
+1. 无需安装额外的 CLI / MCP / Hook 工具，所以对任何 AI Harness 都适用。  
 2. 零配置、简单易用也易于理解，无需搭建复杂的知识沉淀工作流也能获得一个高质量的项目知识库。    
-3. 对你和你团队的日常工作流几乎没什么侵入性。并且你没有安装此 skill 的同事也能受益。  
+3. 对你和你团队的日常工作流几乎没什么侵入性。并且你没有安装此 skill 的同事也能受益，因为提交信息本身就在仓库里，任何人和任何 Agent 都能读到。  
 
 以下是我对比本项目的 intent-history skill / Codex Harness Memory 机制 / Entire Skill 三个工具或者说机制在 100 个真实的企业开发任务中，对任务产生实际贡献的 benchmark：  
 
@@ -116,7 +116,23 @@ AI 会使用关键词检索既往的 git commit msg 来帮助定位关键源码�
 
 ### 安装和使用 intent-commit skill
 
-<这里给出通过 npx 安装命令，以及通过自然语言让用户的 AI 直接安装 intent-commit skill 的提示词>  
+两个 skill 都遵循 [Agent Skills 规范](https://agentskills.io/specification)，因此可以用 [skills CLI](https://github.com/vercel-labs/skills) 一条命令装到几乎所有主流 AI Agent（Claude Code、Codex、Cursor、OpenCode、Gemini CLI、Copilot 等）：
+
+```bash
+# 安装到当前项目（会写入 ./.claude/skills/ 或 ./.agents/skills/ 等目录，可随项目提交，团队共用）
+npx skills add LeifWebber/git-intent-skills --skill intent-commit
+
+# 或全局安装，对本机所有项目生效
+npx skills add LeifWebber/git-intent-skills --skill intent-commit -g
+```
+
+CLI 会自动检测你本机安装了哪些 Agent；也可以用 `-a` 指定，例如 `-a claude-code -a codex`。
+
+如果不想额外运行命令，也可以直接把下面这段话发给你的 AI Agent，让它自己完成安装：
+
+```markdown
+请安装一个 Agent Skill：把 https://github.com/LeifWebber/git-intent-skills 仓库中 skills/intent-commit 目录（含 SKILL.md 及其同级文件）完整复制到你读取 skills 的目录下（例如 Claude Code 是 ~/.claude/skills/intent-commit/，Codex 是 ~/.agents/skills/intent-commit/）。可以用 git clone 或直接下载文件，安装完成后告诉我目录位置，并确认你已能识别名为 intent-commit 的 skill。
+```
 
 之后在每个 AI 会话任务完成，你准备提交并且开始一个新的 AI 会话的时候，直接向你的 AI Agent 引用 intent-commit skill 然后发送即可，例如对于 Codex：  
 
@@ -133,9 +149,25 @@ $intent-commit 仅提交与样式优化有关的更改
 > [!note] 对于 Parallel Agent
 > 你可能同时启动了多个 Agent 线程进行不同主题的任务，不必担心，此技能只会提交它所属会话相关的内容。甚至对于同一个文件，都只会提交它更改的部分。  
 
-### 安装和使用 intent-history
+### 安装和使用 intent-history skill
 
-<这里给出通过 npx 安装命令，以及通过自然语言让用户的 AI 直接安装 intent-history skill 的提示词>  
+安装方式与上面相同，只是把 skill 名换成 `intent-history`：
+
+```bash
+# 安装到当前项目
+npx skills add LeifWebber/git-intent-skills --skill intent-history
+
+# 或全局安装
+npx skills add LeifWebber/git-intent-skills --skill intent-history -g
+```
+
+如果两个都想装，可以一次装完：`npx skills add LeifWebber/git-intent-skills --skill '*'`。
+
+对应的自然语言安装提示词：
+
+```markdown
+请安装一个 Agent Skill：把 https://github.com/LeifWebber/git-intent-skills 仓库中 skills/intent-history 目录（含 SKILL.md 及其同级文件）完整复制到你读取 skills 的目录下（例如 Claude Code 是 ~/.claude/skills/intent-history/，Codex 是 ~/.agents/skills/intent-history/）。可以用 git clone 或直接下载文件，安装完成后告诉我目录位置，并确认你已能识别名为 intent-history 的 skill。
+```
 
 intent-history 的技能是被动触发的，AI 会在执行任务过程中需要的时候主动使用。通常不需要你主动提及使用。不过你依然可以在需要的时候这么做，来代替你手动翻历史和代码注释：  
 
