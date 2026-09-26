@@ -31,11 +31,6 @@ Codex 和 Claude 在今年 2 月也陆续上线了和 Memory 有关的 feature�
 2. 零配置、简单易用也易于理解，无需搭建复杂的知识沉淀工作流也能获得一个高质量的项目知识库。    
 3. 对你和你团队的日常工作流几乎没什么侵入性。并且你没有安装此 skill 的同事也能受益，因为提交信息本身就在仓库里，任何人和任何 Agent 都能读到。  
 
-以下是我对比本项目的 intent-history skill / Codex Harness Memory 机制 / Entire Skill 三个工具或者说机制在 100 个真实的企业开发任务中，对任务产生实际贡献的 benchmark：  
-
-<这里补充 benchmark 图>
-
-
 ## 是什么，会做什么
 
 这个项目只包含 2 个符合 [Agent Skills 规范](https://agentskills.io/specification) 的 skill，不包含运行时脚本，也不要求特定技术栈、MCP 服务。  
@@ -110,13 +105,14 @@ AI 会使用关键词检索既往的 git commit msg 来帮助定位关键源码�
 
 ## 安装和使用
 
-不推荐一开始就把两个 skill 都装上，因为你之前的项目 git commit 历史可能并不符合 intent-history skill 的需要。  
-
-推荐先安装 intent-commit skill，并使用它积累足够的 intent-commits 后，再补充安装 intent-history skill。  
+> [!note]
+> 不推荐一开始就把两个 skill 都装上，因为你之前的项目 git commit 历史可能并不符合 intent-history skill 的需要。  
+> 
+> 推荐先安装 intent-commit skill，并使用它积累足够的 intent-commits 后，再补充安装 intent-history skill。  
 
 ### 安装和使用 intent-commit skill
 
-两个 skill 都遵循 [Agent Skills 规范](https://agentskills.io/specification)，因此可以用 [skills CLI](https://github.com/vercel-labs/skills) 一条命令装到几乎所有主流 AI Agent（Claude Code、Codex、Cursor、OpenCode、Gemini CLI、Copilot 等）：
+可以用 [skills CLI](https://github.com/vercel-labs/skills) 一条命令装到几乎所有主流 AI Agent：
 
 ```bash
 # 安装到当前项目（会写入 ./.claude/skills/ 或 ./.agents/skills/ 等目录，可随项目提交，团队共用）
@@ -128,10 +124,10 @@ npx skills add LeifWebber/git-intent-skills --skill intent-commit -g
 
 CLI 会自动检测你本机安装了哪些 Agent；也可以用 `-a` 指定，例如 `-a claude-code -a codex`。
 
-如果不想额外运行命令，也可以直接把下面这段话发给你的 AI Agent，让它自己完成安装：
+如果不想额外运行命令，也可以直接把下面这段 prompt 发给你的 AI Agent。类似 Codex 的很多 Agent 本身就有 skill-installer 的内置技能，让它自己完成安装：
 
 ```markdown
-请安装一个 Agent Skill：把 https://github.com/LeifWebber/git-intent-skills 仓库中 skills/intent-commit 目录（含 SKILL.md 及其同级文件）完整复制到你读取 skills 的目录下（例如 Claude Code 是 ~/.claude/skills/intent-commit/，Codex 是 ~/.agents/skills/intent-commit/）。可以用 git clone 或直接下载文件，安装完成后告诉我目录位置，并确认你已能识别名为 intent-commit 的 skill。
+请安装一个 Agent Skill：把 https://github.com/LeifWebber/git-intent-skills 仓库中 skills/intent-commit 目录（含 SKILL.md 及其同级文件）完整复制到你读取 skills 的目录下（例如 Claude Code 是 ~/.claude/skills/intent-commit/，Codex 是 ~/.agents/skills/intent-commit/）。安装完成后告诉我目录位置，并确认你已能识别名为 intent-commit 的 skill。
 ```
 
 之后在每个 AI 会话任务完成，你准备提交并且开始一个新的 AI 会话的时候，直接向你的 AI Agent 引用 intent-commit skill 然后发送即可，例如对于 Codex：  
@@ -166,7 +162,7 @@ npx skills add LeifWebber/git-intent-skills --skill intent-history -g
 对应的自然语言安装提示词：
 
 ```markdown
-请安装一个 Agent Skill：把 https://github.com/LeifWebber/git-intent-skills 仓库中 skills/intent-history 目录（含 SKILL.md 及其同级文件）完整复制到你读取 skills 的目录下（例如 Claude Code 是 ~/.claude/skills/intent-history/，Codex 是 ~/.agents/skills/intent-history/）。可以用 git clone 或直接下载文件，安装完成后告诉我目录位置，并确认你已能识别名为 intent-history 的 skill。
+请安装一个 Agent Skill：把 https://github.com/LeifWebber/git-intent-skills 仓库中 skills/intent-history 目录（含 SKILL.md 及其同级文件）完整复制到你读取 skills 的目录下（例如 Claude Code 是 ~/.claude/skills/intent-history/，Codex 是 ~/.agents/skills/intent-history/）。安装完成后告诉我目录位置，并确认你已能识别名为 intent-history 的 skill。
 ```
 
 intent-history 的技能是被动触发的，AI 会在执行任务过程中需要的时候主动使用。通常不需要你主动提及使用。不过你依然可以在需要的时候这么做，来代替你手动翻历史和代码注释：  

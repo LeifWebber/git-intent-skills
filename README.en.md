@@ -31,11 +31,6 @@ I have practiced this for a long time in the enterprise projects I maintain, and
 2. Zero configuration, easy to use and easy to understand. You get a high-quality project knowledge base without building a complex knowledge-capture workflow.
 3. Almost no intrusion into your team's daily workflow. Teammates who have not installed the skill benefit too, because the commit messages live in the repository and anyone, human or agent, can read them.
 
-Below is a benchmark comparing this project's intent-history skill, the Codex harness memory mechanism, and the Entire skill on 100 real enterprise development tasks, measured by whether each one made an actual contribution to the task:
-
-<benchmark chart to be added>
-
-
 ## What it is and what it does
 
 This project contains just two skills that follow the [Agent Skills specification](https://agentskills.io/specification). There are no runtime scripts, and no particular tech stack or MCP server is required.
@@ -110,13 +105,14 @@ This usually happens once the AI has already located the key source file. It the
 
 ## Installation and usage
 
-Installing both skills right away is not recommended, because your project's existing commit history probably does not yet meet what the intent-history skill needs.
-
-Install intent-commit first, use it to accumulate enough intent commits, and then add intent-history.
+> [!note]
+> Installing both skills right away is not recommended, because your project's existing commit history probably does not yet meet what the intent-history skill needs.
+> 
+> Install intent-commit first, use it to accumulate enough intent commits, and then add intent-history.
 
 ### Install and use the intent-commit skill
 
-Both skills follow the [Agent Skills specification](https://agentskills.io/specification), so you can install them into almost every mainstream AI agent (Claude Code, Codex, Cursor, OpenCode, Gemini CLI, Copilot, and more) with a single [skills CLI](https://github.com/vercel-labs/skills) command:
+You can install it into almost every mainstream AI agent with a single [skills CLI](https://github.com/vercel-labs/skills) command:
 
 ```bash
 # Install into the current project (written to ./.claude/skills/, ./.agents/skills/ etc.; commit it so the whole team shares it)
@@ -128,10 +124,10 @@ npx skills add LeifWebber/git-intent-skills --skill intent-commit -g
 
 The CLI auto-detects which agents are installed on your machine. You can also pick them explicitly with `-a`, for example `-a claude-code -a codex`.
 
-If you would rather not run a command, paste the following to your AI agent and let it install the skill itself:
+If you would rather not run a command, paste the following prompt to your AI agent. Many agents, Codex among them, ship with a built-in skill-installer skill, so just let it do the installation itself:
 
 ```markdown
-Please install an Agent Skill: copy the skills/intent-commit directory (SKILL.md and its sibling files) from the repository https://github.com/LeifWebber/git-intent-skills into the directory you load skills from (for example ~/.claude/skills/intent-commit/ for Claude Code, or ~/.agents/skills/intent-commit/ for Codex). You may git clone or download the files directly. When done, tell me the directory you used and confirm that you can now recognize a skill named intent-commit.
+Please install an Agent Skill: copy the skills/intent-commit directory (SKILL.md and its sibling files) from the repository https://github.com/LeifWebber/git-intent-skills into the directory you load skills from (for example ~/.claude/skills/intent-commit/ for Claude Code, or ~/.agents/skills/intent-commit/ for Codex). When done, tell me the directory you used and confirm that you can now recognize a skill named intent-commit.
 ```
 
 Then, whenever a session's task is finished and you are about to commit and start a new AI session, simply reference the intent-commit skill in your message. For Codex, for example:
@@ -166,7 +162,7 @@ To install both at once: `npx skills add LeifWebber/git-intent-skills --skill '*
 The matching natural-language install prompt:
 
 ```markdown
-Please install an Agent Skill: copy the skills/intent-history directory (SKILL.md and its sibling files) from the repository https://github.com/LeifWebber/git-intent-skills into the directory you load skills from (for example ~/.claude/skills/intent-history/ for Claude Code, or ~/.agents/skills/intent-history/ for Codex). You may git clone or download the files directly. When done, tell me the directory you used and confirm that you can now recognize a skill named intent-history.
+Please install an Agent Skill: copy the skills/intent-history directory (SKILL.md and its sibling files) from the repository https://github.com/LeifWebber/git-intent-skills into the directory you load skills from (for example ~/.claude/skills/intent-history/ for Claude Code, or ~/.agents/skills/intent-history/ for Codex). When done, tell me the directory you used and confirm that you can now recognize a skill named intent-history.
 ```
 
 The intent-history skill is triggered passively: the AI uses it on its own when a task calls for it, so you normally don't need to mention it. You can still invoke it explicitly whenever you like, as a replacement for digging through history and code comments yourself:
