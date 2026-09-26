@@ -20,7 +20,7 @@ AI Agent 在执行任务的过程中，可能会进行若干次 Agentic Search �
 正因如此，有人会主动为 AI 维护“项目文档 / 知识库”，亦或者是做“沉淀经验”之类的事，方便 AI 能在遇到问题的时候直接复用已有的经验和知识背景，而不是在源码的海洋里探索。  
 
 Codex 和 Claude 在今年 2 月也陆续上线了和 Memory 有关的 feature。  
-例如 Codex 会在 `~/.codex/memories/` 下，存储包括摘要、持久条目、近期输入，以及来自先前聊天的支持性证据。见 [Codex 官方 Memories 文档](https://learn.chatgpt.com/docs/customization/memories?surface=cli#cli-local-memory-storage)  
+例如 Codex 会在 `~/.codex/memories/` 下，存储包括摘要、持久条目、近期输入，以及来自先前聊天的支持性证据。见 [Codex 官方 Memories 文档](https://learn.chatgpt.com/docs/customization/memories?surface=cli#cli-local-memory-storage)  
 
 另一个类似的工具是 [Entire](https://entire.io/)，它会在每次提交的时候保留 ai seesion 的完整记录，在需要消费的时候可以进行语义化检索。  
 
