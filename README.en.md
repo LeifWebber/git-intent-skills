@@ -25,7 +25,7 @@ While working on a task, an agent may run several rounds of agentic search to ga
 
 That is why people maintain "project docs / knowledge bases" for AI, or do things like "capturing lessons learned", so the AI can reuse existing experience and background when it hits a problem instead of exploring an ocean of source code.
 
-> [!info]
+> [!NOTE]
 > Codex and Claude both shipped memory-related features this February.
 > Codex, for example, stores summaries, persistent entries, recent inputs and supporting evidence from earlier chats under `~/.codex/memories/`. See the [official Codex Memories docs](https://learn.chatgpt.com/docs/customization/memories?surface=cli#cli-local-memory-storage).
 > 
@@ -112,7 +112,7 @@ This usually happens once the AI has already located the key source file. It the
 
 ## Installation and usage
 
-> [!note]
+> [!TIP]
 > Installing both skills right away is not recommended, because your project's existing commit history probably does not yet meet what the intent-history skill needs.
 > 
 > Install intent-commit first, use it to accumulate enough intent commits, and then add intent-history.
@@ -149,7 +149,7 @@ Or narrow the scope:
 $intent-commit only commit the changes related to the style tweaks
 ```
 
-> [!note]
+> [!TIP]
 > Parallel agents:
 > You may be running several agent threads on different topics at the same time. Don't worry: this skill only commits the content related to its own session. Even within a single file, it only commits the parts that session changed.
 

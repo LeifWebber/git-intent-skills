@@ -25,7 +25,7 @@ AI Agent 在执行任务的过程中，可能会进行若干次 Agentic Search �
 
 正因如此，有人会主动为 AI 维护“项目文档 / 知识库”，亦或者是做“沉淀经验”之类的事，方便 AI 能在遇到问题的时候直接复用已有的经验和知识背景，而不是在源码的海洋里探索。  
 
-> [!info]
+> [!NOTE]
 > Codex 和 Claude 在今年 2 月也陆续上线了和 Memory 有关的 feature。  
 > 例如 Codex 会在 `~/.codex/memories/` 下，存储包括摘要、持久条目、近期输入，以及来自先前聊天的支持性证据。见 [Codex 官方 Memories 文档](https://learn.chatgpt.com/docs/customization/memories?surface=cli#cli-local-memory-storage)  
 > 
@@ -112,7 +112,7 @@ AI 会使用关键词检索既往的 git commit msg 来帮助定位关键源码�
 
 ## 安装和使用
 
-> [!note]
+> [!TIP]
 > 不推荐一开始就把两个 skill 都装上，因为你之前的项目 git commit 历史可能并不符合 intent-history skill 的需要。  
 > 
 > 推荐先安装 intent-commit skill，并使用它积累足够的 intent-commits 后，再补充安装 intent-history skill。  
@@ -149,7 +149,7 @@ $intent-commit
 $intent-commit 仅提交与样式优化有关的更改
 ```
 
-> [!note]
+> [!TIP]
 > 对于 Parallel Agent：
 > 你可能同时启动了多个 Agent 线程进行不同主题的任务，不必担心，此技能只会提交它所属会话相关的内容。甚至对于同一个文件，都只会提交它更改的部分。  
 
