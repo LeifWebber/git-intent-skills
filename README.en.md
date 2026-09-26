@@ -11,6 +11,12 @@ Turn your git history into an asset that makes a decisive difference for AI agen
 
 <br/>
 
+This project contains just two skills that follow the [Agent Skills specification](https://agentskills.io/specification). There are no runtime scripts, and no particular tech stack or MCP server is required.
+
+One skill guides your AI agent to create carefully designed git commits, called `intent-commit`s, which gradually build up a knowledge base inside your project. The other skill guides your AI agent to consume that knowledge base at the right moment.
+
+Quick install commands and usage for both skills are in the [section at the end](#installation-and-usage). The sections below explain why these skills matter, how they are designed, and how they work.
+
 ## Why this project exists
 
 Efficient, precise context is critical for an AI agent to finish a task well.
@@ -19,13 +25,15 @@ While working on a task, an agent may run several rounds of agentic search to ga
 
 That is why people maintain "project docs / knowledge bases" for AI, or do things like "capturing lessons learned", so the AI can reuse existing experience and background when it hits a problem instead of exploring an ocean of source code.
 
-Codex and Claude both shipped memory-related features this February.
-Codex, for example, stores summaries, persistent entries, recent inputs and supporting evidence from earlier chats under `~/.codex/memories/`. See the [official Codex Memories docs](https://learn.chatgpt.com/docs/customization/memories?surface=cli#cli-local-memory-storage).
+> [!info]
+> Codex and Claude both shipped memory-related features this February.
+> Codex, for example, stores summaries, persistent entries, recent inputs and supporting evidence from earlier chats under `~/.codex/memories/`. See the [official Codex Memories docs](https://learn.chatgpt.com/docs/customization/memories?surface=cli#cli-local-memory-storage).
+> 
+> Another similar tool is [Entire](https://entire.io/), which keeps the full AI session record on every commit and lets you search it semantically when you need it.
 
-Another similar tool is [Entire](https://entire.io/), which keeps the full AI session record on every commit and lets you search it semantically when you need it.
+My approach is simpler: **use the git commit message itself**.
 
-My approach is simpler: use the git commit message itself.
-I have practiced this for a long time in the enterprise projects I maintain, and I regularly see it hand the AI a crucial piece of information at exactly the right moment. It also has a few advantages over the other approaches that I did not expect:
+I have practiced this for a long time in the enterprise projects I maintain, and I regularly see it hand the AI a crucial piece of information at exactly the right moment. It also has a few extra advantages over the other approaches:
 
 1. No extra CLI / MCP / hook to install, so it works with any AI harness.
 2. Zero configuration, easy to use and easy to understand. You get a high-quality project knowledge base without building a complex knowledge-capture workflow.
@@ -33,13 +41,12 @@ I have practiced this for a long time in the enterprise projects I maintain, and
 
 ## What it is and what it does
 
-This project contains just two skills that follow the [Agent Skills specification](https://agentskills.io/specification). There are no runtime scripts, and no particular tech stack or MCP server is required.
-
 ### 1. [intent-commit skill](skills/intent-commit/SKILL.md), the producer
 
 A session between you and an AI usually revolves around one topic (stuffing unrelated tasks into a single AI session is not recommended anyway). When the task in that session is done, you invoke the intent-commit skill once, by hand.
 
 The AI takes **only the changes related to this session** and splits them into one or more git commits that follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/). Every commit message is carefully designed and usually takes this shape:
+
 ```text
 <type>(<scope>): <purpose, fix, or behavior change>
 
@@ -142,7 +149,8 @@ Or narrow the scope:
 $intent-commit only commit the changes related to the style tweaks
 ```
 
-> [!note] Parallel agents
+> [!note]
+> Parallel agents:
 > You may be running several agent threads on different topics at the same time. Don't worry: this skill only commits the content related to its own session. Even within a single file, it only commits the parts that session changed.
 
 ### Install and use the intent-history skill

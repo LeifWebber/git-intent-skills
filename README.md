@@ -11,6 +11,12 @@
 
 <br/>
 
+这个项目只包含 2 个符合 [Agent Skills 规范](https://agentskills.io/specification) 的 skill，不包含运行时脚本，也不要求特定技术栈、MCP 服务。  
+
+其中一个 skill 用于指导你的 AI Agent 创建精心设计过的 git commit，这些 commit 被称之为 `intent-commit`，其会逐渐在你的项目中形成一个知识库。而另一个 skill 则指导你的 AI Agent 在合适的时机消费它。  
+
+快捷安装这两个 skill 的命令，以及使用方法可见[文末的章节](#安装和使用)。下面会阐述这两个 skill 的意义、设计思路以及工作机制。  
+
 ## 为什么要做这个项目
 
 高效、精准的上下文对 AI Agent 顺利完成任务至关重要。  
@@ -19,13 +25,15 @@ AI Agent 在执行任务的过程中，可能会进行若干次 Agentic Search �
 
 正因如此，有人会主动为 AI 维护“项目文档 / 知识库”，亦或者是做“沉淀经验”之类的事，方便 AI 能在遇到问题的时候直接复用已有的经验和知识背景，而不是在源码的海洋里探索。  
 
-Codex 和 Claude 在今年 2 月也陆续上线了和 Memory 有关的 feature。  
-例如 Codex 会在 `~/.codex/memories/` 下，存储包括摘要、持久条目、近期输入，以及来自先前聊天的支持性证据。见 [Codex 官方 Memories 文档](https://learn.chatgpt.com/docs/customization/memories?surface=cli#cli-local-memory-storage)  
+> [!info]
+> Codex 和 Claude 在今年 2 月也陆续上线了和 Memory 有关的 feature。  
+> 例如 Codex 会在 `~/.codex/memories/` 下，存储包括摘要、持久条目、近期输入，以及来自先前聊天的支持性证据。见 [Codex 官方 Memories 文档](https://learn.chatgpt.com/docs/customization/memories?surface=cli#cli-local-memory-storage)  
+> 
+> 另一个类似的工具是 [Entire](https://entire.io/)，它会在每次提交的时候保留 AI session 的完整记录，在需要消费的时候可以进行语义化检索。  
 
-另一个类似的工具是 [Entire](https://entire.io/)，它会在每次提交的时候保留 AI session 的完整记录，在需要消费的时候可以进行语义化检索。  
+而我的思路很简单：**直接利用 git 提交信息本身**。  
 
-而我的思路很简单：直接利用 git 提交信息本身。  
-我在自己维护的企业级项目里实践了这种方式很久，经常观察到它在关键时刻给 AI 提供了至关重要的信息。除此之外，这种方式相比于其他几种甚至还有些出乎意料的优势：  
+我在自己维护的企业级项目里实践了这种方式很久，经常观察到它在关键时刻给 AI 提供了至关重要的信息。除此之外，这种方式相比于其他几种甚至还有些额外的优势：  
 
 1. 无需安装额外的 CLI / MCP / Hook 工具，所以对任何 AI Harness 都适用。  
 2. 零配置、简单易用也易于理解，无需搭建复杂的知识沉淀工作流也能获得一个高质量的项目知识库。    
@@ -33,13 +41,12 @@ Codex 和 Claude 在今年 2 月也陆续上线了和 Memory 有关的 feature�
 
 ## 是什么，会做什么
 
-这个项目只包含 2 个符合 [Agent Skills 规范](https://agentskills.io/specification) 的 skill，不包含运行时脚本，也不要求特定技术栈、MCP 服务。  
-
 ### 1. [intent-commit skill](skills/intent-commit/SKILL.md)，生产者  
 
 你和 AI 的 1 个会话往往是围绕一个主题的（把所有互不相关的任务全部塞进同一个 ai 会话本身就不被建议）。当这个会话中的任务完成的时候，你需要手动引用一次 intent-commit skill。  
 
 AI 会把**仅与本次会话相关的改动**，拆分成 1 个或多个符合 [Conventional Commits 规范](https://www.conventionalcommits.org/en/v1.0.0/) 的 git commit。  每一个 commit 的提交信息都是被精心设计过的，它往往采用这种格式：  
+
 ```text
 <type>(<scope>): <目的、问题修复或行为变化>
 
@@ -142,7 +149,8 @@ $intent-commit
 $intent-commit 仅提交与样式优化有关的更改
 ```
 
-> [!note] 对于 Parallel Agent
+> [!note]
+> 对于 Parallel Agent：
 > 你可能同时启动了多个 Agent 线程进行不同主题的任务，不必担心，此技能只会提交它所属会话相关的内容。甚至对于同一个文件，都只会提交它更改的部分。  
 
 ### 安装和使用 intent-history skill
